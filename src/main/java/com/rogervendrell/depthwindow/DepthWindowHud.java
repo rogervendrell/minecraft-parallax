@@ -46,7 +46,7 @@ final class DepthWindowHud {
 		HeadTrackingReceiver.Sample fresh = receiver.fresh(cfg.trackingTimeoutSeconds);
 		List<String> lines = new ArrayList<>();
 
-		lines.add("Depth Window: " + (cfg.enabled ? "ON" : "OFF") + (HeadCoupledView.isActive() ? "  (active)" : ""));
+		lines.add("Depth Window: " + (cfg.enabled ? "ON" : "OFF") + "  mode: " + cfg.viewMode.displayName().getString() + (HeadCoupledView.isActive() ? "  (active)" : ""));
 		if (receiver.error() != null) {
 			lines.add("UDP error: " + receiver.error());
 		} else if (fresh == null) {

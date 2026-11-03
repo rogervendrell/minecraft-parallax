@@ -130,7 +130,7 @@ public final class HeadCoupledView {
 		headPitch = smoothPitch;
 		float yawDelta = 0.0F;
 		float pitchDelta = 0.0F;
-		if (cfg.headRotation && !detached) {
+		if (cfg.viewMode.headLook() && !detached) {
 			double maxDeg = Math.max(cfg.rotationMaxDegrees, 0.0);
 			yawDelta = (float) (clamp(cfg.rotationYawGain * deadzone(smoothYaw, cfg.rotationDeadzoneDegrees), -maxDeg, maxDeg) * weight);
 			pitchDelta = (float) (clamp(cfg.rotationPitchGain * deadzone(smoothPitch, cfg.rotationDeadzoneDegrees), -maxDeg, maxDeg) * weight);

@@ -21,6 +21,22 @@ webcam ──► tracker/head_tracker.py ──UDP 4242──► Depth Window mo
 
 3. Join a world and sit how you normally sit. About a second after tracking data arrives, the mod centers on your current head position and fades the effect in. Press **F8** to recenter at any time. Press **F11** for fullscreen: the effect assumes the game fills the screen.
 
+## Settings menu
+
+Press **F6**, click **Depth Window...** in the bottom-left corner of the pause menu, or type `/depthwindow menu`. The menu has:
+
+- **Status & keys:** whether the tracker is connected, what each key does, **Recenter now**, and a shortcut to rebind keys.
+- **Mode:**
+  - **Window only:** moving your head moves the view behind the screen.
+  - **Window + head look:** turning your head also turns the view.
+- **Head look:** left/right and up/down amplification (default ×2.0 / ×1.5), deadzone, and maximum look angle. These are greyed out in *Window only* mode.
+- **Depth effect:** strength, window distance, smoothing, and whether the crosshair follows your aim.
+- **Other:** third person, auto recenter, status overlay, and **Reset to defaults**, which keeps your calibration.
+
+Changes apply immediately, so you can watch them in the world behind the menu. They're saved when you close the menu.
+
+To add a setting, create it with `toggle(...)` or `slider(...)` in `DepthWindowScreen.addOptions()` and add its text to `assets/depthwindow/lang/en_us.json`.
+
 ## Keys
 
 You can rebind these under *Options → Controls → Depth Window*. On HP laptops you may need to hold Fn.
@@ -30,6 +46,7 @@ You can rebind these under *Options → Controls → Depth Window*. On HP laptop
 | F7 | Toggle the effect (fades in and out) |
 | F8 | Recenter: your current head position becomes the neutral, vanilla-looking view |
 | F9 | Status overlay (tracker rate, eye position, camera offset) |
+| F6 | Settings menu |
 
 ## Calibration
 
@@ -44,6 +61,7 @@ Run `./tracker/run_tracker.sh --help` for every option, including `--camera 1` a
 
 ```
 /depthwindow                  status
+/depthwindow menu             open the settings menu
 /depthwindow toggle | recenter | reload | reset
 /depthwindow get              list all options
 /depthwindow set <option> <value>
@@ -56,7 +74,7 @@ Useful options (all are stored in `config/depthwindow.json`):
 | `windowDistanceBlocks` | 1.0 | Where the virtual glass sits. Things at this distance stay still. Larger values make close things pop out of the screen. Smaller values put everything behind it. |
 | `strength` | 1.0 | Exaggerates head movement. 1 is physically correct. Try 1.5–2 for a stronger effect. |
 | `physicalFov` | false | true uses the real angle your screen covers instead of your FOV setting: true to life, but very zoomed in. |
-| `headRotation` | true | Turning your head turns the view. This is visual only: you keep aiming and walking where the mouse points, and the crosshair stays on that spot. |
+| `viewMode` | WINDOW_AND_HEAD_LOOK | `WINDOW` (head position only) or `WINDOW_AND_HEAD_LOOK`: turning your head turns the view. This is visual only: you keep aiming and walking where the mouse points, and the crosshair stays on that spot. |
 | `rotationYawGain`, `rotationPitchGain` | 2.0, 1.5 | View degrees per degree of head turn. |
 | `rotationDeadzoneDegrees` | 2.0 | Ignores small head turns so the view doesn't wobble. |
 | `rotationMaxDegrees` | 70 | The furthest the view can turn away from your aim. |

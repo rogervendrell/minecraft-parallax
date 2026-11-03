@@ -22,6 +22,10 @@ final class DepthWindowCommands {
 				}
 				return 1;
 			})
+			.then(literal("menu").executes(ctx -> {
+				DepthWindowClient.openMenuSoon();
+				return 1;
+			}))
 			.then(literal("toggle").executes(ctx -> {
 				DepthWindowClient.toggle();
 				return 1;

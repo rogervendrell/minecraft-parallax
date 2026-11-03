@@ -2,6 +2,9 @@ package com.rogervendrell.depthwindow.test;
 
 import com.rogervendrell.depthwindow.DepthWindowClient;
 import com.rogervendrell.depthwindow.HeadCoupledView;
+import com.rogervendrell.depthwindow.ViewMode;
+import com.rogervendrell.depthwindow.gui.DepthWindowScreen;
+import net.minecraft.client.gui.screens.PauseScreen;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -89,9 +92,9 @@ public class DepthWindowClientGameTest implements FabricClientGameTest {
 			shot(context, "16_turn_head_left_15deg", new double[]{0, 0, 50, -15, 0});
 			shot(context, "17_look_up_10deg", new double[]{0, 0, 50, 0, 10});
 			shot(context, "18_turn_and_lean_right", new double[]{8, 0, 50, 12, 0});
-			context.runOnClient(mc -> DepthWindowClient.config().headRotation = false);
+			context.runOnClient(mc -> DepthWindowClient.config().viewMode = com.rogervendrell.depthwindow.ViewMode.WINDOW);
 			shot(context, "19_rotation_off_head_turned", new double[]{0, 0, 50, 15, 0});
-			context.runOnClient(mc -> DepthWindowClient.config().headRotation = true);
+			context.runOnClient(mc -> DepthWindowClient.config().viewMode = com.rogervendrell.depthwindow.ViewMode.WINDOW_AND_HEAD_LOOK);
 
 			// Eye positions outside the screen rectangle (these froze the game before the fix).
 			shot(context, "11_eyes_at_webcam_height", new double[]{0, 9.7, 50});
@@ -103,6 +106,40 @@ public class DepthWindowClientGameTest implements FabricClientGameTest {
 			server.runCommand("fill 1 -60 -1 1 -58 1 minecraft:stone_bricks");
 			context.waitTicks(20);
 			shot(context, "10_lean_into_wall_right", new double[]{25, 0, 50});
+
+			// Settings menu: open it, scroll through it, switch mode, and reach it from the pause menu.
+			head = new double[]{0, 0, 50};
+			context.setScreen(() -> new DepthWindowScreen(null));
+			context.waitTicks(10);
+			context.takeScreenshot("20_settings_menu_top");
+			context.getInput().setCursorPos(10, 300);
+			context.getInput().scroll(-6);
+			context.waitTicks(5);
+			context.takeScreenshot("21_settings_menu_scrolled");
+			context.getInput().scroll(-20);
+			context.waitTicks(5);
+			context.takeScreenshot("22_settings_menu_bottom");
+			context.runOnClient(mc -> DepthWindowClient.config().viewMode = ViewMode.WINDOW);
+			context.setScreen(() -> new DepthWindowScreen(null));
+			context.waitTicks(5);
+			context.getInput().setCursorPos(10, 300);
+			context.getInput().scroll(-11);
+			context.waitTicks(5);
+			context.takeScreenshot("23_settings_window_only_mode_greyed_sliders");
+			context.runOnClient(mc -> DepthWindowClient.config().viewMode = ViewMode.WINDOW_AND_HEAD_LOOK);
+
+			context.setScreen(() -> new PauseScreen(true));
+			context.waitTicks(10);
+			context.takeScreenshot("24_pause_menu_button");
+			context.clickScreenButton("depthwindow.pause_button");
+			context.waitTicks(5);
+			String opened = context.computeOnClient(mc -> String.valueOf(mc.gui.screen() == null ? null : mc.gui.screen().getClass().getSimpleName()));
+			LOGGER.info("[DepthWindowTest] pause button opened: {}", opened);
+			if (!"DepthWindowScreen".equals(opened)) {
+				throw new AssertionError("Pause menu button did not open the settings screen: " + opened);
+			}
+			context.setScreen(() -> null);
+			context.waitTicks(5);
 		} finally {
 			head = null;
 		}

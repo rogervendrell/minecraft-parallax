@@ -1,15 +1,21 @@
 package com.rogervendrell.depthwindow;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import com.rogervendrell.depthwindow.gui.DepthWindowScreen;
 import java.util.Locale;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
+import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
+import net.fabricmc.fabric.api.client.screen.v1.Screens;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import org.slf4j.Logger;
@@ -25,6 +31,9 @@ public final class DepthWindowClient implements ClientModInitializer {
 	private static KeyMapping toggleKey;
 	private static KeyMapping recenterKey;
 	private static KeyMapping statusKey;
+	private static KeyMapping menuKey;
+	/** Set by "/depthwindow menu"; the screen opens on the next tick, after the chat screen has closed. */
+	private static boolean openMenuNextTick;
 	/** Whether the head position has been centred since the game started (manually or automatically). */
 	private static boolean centeredThisSession;
 	private static int freshTicks;
@@ -38,11 +47,23 @@ public final class DepthWindowClient implements ClientModInitializer {
 		toggleKey = KeyMappingHelper.registerKeyMapping(new KeyMapping("key.depthwindow.toggle", InputConstants.KEY_F7, category));
 		recenterKey = KeyMappingHelper.registerKeyMapping(new KeyMapping("key.depthwindow.recenter", InputConstants.KEY_F8, category));
 		statusKey = KeyMappingHelper.registerKeyMapping(new KeyMapping("key.depthwindow.status", InputConstants.KEY_F9, category));
+		menuKey = KeyMappingHelper.registerKeyMapping(new KeyMapping("key.depthwindow.menu", InputConstants.KEY_F6, category));
 
 		ClientTickEvents.END_CLIENT_TICK.register(DepthWindowClient::onEndTick);
 		ClientLifecycleEvents.CLIENT_STOPPING.register(client -> RECEIVER.stop());
 		ClientCommandRegistrationCallback.EVENT.register((dispatcher, buildContext) -> DepthWindowCommands.register(dispatcher));
 		DepthWindowHud.register();
+
+		// A "Depth Window..." button in the bottom-left corner of the pause menu.
+		ScreenEvents.AFTER_INIT.register((client, screen, width, height) -> {
+			if (screen instanceof PauseScreen pause && pause.showsPauseMenu()) {
+				Screens.getWidgets(screen).add(Button.builder(Component.translatable("depthwindow.pause_button"),
+						button -> client.gui.setScreen(new DepthWindowScreen(screen)))
+					.bounds(4, height - 24, 110, 20)
+					.tooltip(Tooltip.create(Component.translatable("depthwindow.pause_button.tooltip")))
+					.build());
+			}
+		});
 	}
 
 	private static void onEndTick(Minecraft mc) {
@@ -55,6 +76,13 @@ public final class DepthWindowClient implements ClientModInitializer {
 		while (statusKey.consumeClick()) {
 			config.showStatusHud = !config.showStatusHud;
 			config.save();
+		}
+		while (menuKey.consumeClick()) {
+			openMenuNextTick = true;
+		}
+		if (openMenuNextTick && mc.gui.screen() == null) {
+			openMenuNextTick = false;
+			mc.gui.setScreen(new DepthWindowScreen(null));
 		}
 
 		// First connection this session: centre on the current head position after a second of stable data.
@@ -126,6 +154,27 @@ public final class DepthWindowClient implements ClientModInitializer {
 		if (mc.player != null) {
 			mc.player.sendOverlayMessage(message);
 		}
+	}
+
+	/** Opens the settings menu once the current screen (e.g. chat) has closed. */
+	public static void openMenuSoon() {
+		openMenuNextTick = true;
+	}
+
+	public static KeyMapping toggleKey() {
+		return toggleKey;
+	}
+
+	public static KeyMapping recenterKey() {
+		return recenterKey;
+	}
+
+	public static KeyMapping statusKey() {
+		return statusKey;
+	}
+
+	public static KeyMapping menuKey() {
+		return menuKey;
 	}
 
 	public static DepthWindowConfig config() {

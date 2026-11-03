@@ -2,5 +2,67 @@
 	"key.category.depthwindow.main": "Depth Window (Head Tracking)",
 	"key.depthwindow.toggle": "Toggle depth effect",
 	"key.depthwindow.recenter": "Recenter head position",
-	"key.depthwindow.status": "Show tracking status"
+	"key.depthwindow.status": "Show tracking status",
+	"key.depthwindow.menu": "Open Depth Window settings",
+
+	"depthwindow.pause_button": "Depth Window...",
+	"depthwindow.pause_button.tooltip": "Head tracking settings",
+
+	"depthwindow.mode.window": "Window only",
+	"depthwindow.mode.window.tooltip": "Moving your head moves the view behind the screen, like looking through a real window. Turning your head does nothing.",
+	"depthwindow.mode.window_and_head_look": "Window + head look",
+	"depthwindow.mode.window_and_head_look.tooltip": "Window effect, plus turning your head turns the view (amplified, so your eyes can stay on the screen). Your aim stays where the mouse points.",
+
+	"depthwindow.options.title": "Depth Window Settings",
+	"depthwindow.options.section.status": "Status & keys",
+	"depthwindow.options.section.mode": "Mode",
+	"depthwindow.options.section.look": "Head look (turning your head)",
+	"depthwindow.options.section.depth": "Depth effect (moving your head)",
+	"depthwindow.options.section.other": "Other",
+
+	"depthwindow.options.tracker.connected": "Tracker connected (%s Hz)",
+	"depthwindow.options.tracker.waiting": "Tracker not connected: start ./tracker/run_tracker.sh",
+	"depthwindow.options.tracker.error": "Tracker problem: %s",
+
+	"depthwindow.options.key_hint.recenter": "%s Recenter: your current pose becomes \"straight ahead\"",
+	"depthwindow.options.key_hint.toggle": "%s Turn the effect on or off",
+	"depthwindow.options.key_hint.status": "%s Show or hide the status overlay",
+	"depthwindow.options.key_hint.menu": "%s Open this menu (or /depthwindow menu)",
+
+	"depthwindow.options.recenter_now": "Recenter now",
+	"depthwindow.options.recenter_now.tooltip": "Sit how you normally play and look at the middle of the screen, then click.",
+	"depthwindow.options.controls": "Change keys...",
+	"depthwindow.options.controls.tooltip": "Rebind keys (look for the Depth Window category).",
+
+	"depthwindow.options.mode": "Mode",
+	"depthwindow.options.enabled": "Effect",
+	"depthwindow.options.enabled.tooltip": "Master switch. Same as the toggle key.",
+
+	"depthwindow.options.yaw_gain": "Left/right look",
+	"depthwindow.options.yaw_gain.tooltip": "How much the view turns per degree you turn your head left or right.",
+	"depthwindow.options.pitch_gain": "Up/down look",
+	"depthwindow.options.pitch_gain.tooltip": "How much the view turns per degree you tilt your head up or down.",
+	"depthwindow.options.deadzone": "Look deadzone",
+	"depthwindow.options.deadzone.tooltip": "Head turns smaller than this are ignored, so the view doesn't wobble when you sit still.",
+	"depthwindow.options.max_turn": "Max look angle",
+	"depthwindow.options.max_turn.tooltip": "The furthest the view can turn away from where you are aiming.",
+
+	"depthwindow.options.strength": "Depth strength",
+	"depthwindow.options.strength.tooltip": "Amplifies head movement for the window effect. 1.0 is physically correct, 0 turns the window effect off.",
+	"depthwindow.options.window_distance": "Window distance",
+	"depthwindow.options.window_distance.tooltip": "How far away (in blocks) the virtual glass is. Things at this distance stay still; closer things pop out of the screen, further things sit behind it.",
+	"depthwindow.options.smoothing": "Smoothing",
+	"depthwindow.options.smoothing.tooltip": "Extra smoothing. Higher is steadier but reacts later.",
+	"depthwindow.options.crosshair": "Crosshair follows aim",
+	"depthwindow.options.crosshair.tooltip": "Moves the crosshair so it stays on the block you would actually hit.",
+
+	"depthwindow.options.third_person": "In third person",
+	"depthwindow.options.third_person.tooltip": "Also apply the window effect in third-person views. Head look only works in first person.",
+	"depthwindow.options.auto_recenter": "Auto recenter",
+	"depthwindow.options.auto_recenter.tooltip": "Recenter automatically when the tracker first connects after starting the game.",
+	"depthwindow.options.status_hud": "Status overlay",
+	"depthwindow.options.status_hud.tooltip": "Show tracking numbers in the top-left corner. Same as the status key.",
+
+	"depthwindow.options.reset": "Reset to defaults",
+	"depthwindow.options.reset.tooltip": "Resets the settings in this menu. Keeps your calibration (screen size, recentered position)."
 }

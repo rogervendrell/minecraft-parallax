@@ -13,6 +13,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import net.fabricmc.loader.api.FabricLoader;
 
 /**
@@ -54,10 +55,11 @@ public final class DepthWindowConfig {
 	 */
 	public double windowDistanceBlocks = 1.0;
 	/**
-	 * Turning your head also turns the view, like TrackIR. Visual only: you keep aiming (and walking) where the
-	 * mouse points, and the crosshair stays on that spot.
+	 * WINDOW: head position only (motion parallax through a fixed window).
+	 * WINDOW_AND_HEAD_LOOK: additionally, turning your head turns the view, like TrackIR. Visual only: you keep
+	 * aiming (and walking) where the mouse points, and the crosshair stays on that spot.
 	 */
-	public boolean headRotation = true;
+	public ViewMode viewMode = ViewMode.WINDOW_AND_HEAD_LOOK;
 	/** View degrees per degree of head turn. Your eyes have to stay on the screen, so values above 1 help. */
 	public double rotationYawGain = 2.0;
 	public double rotationPitchGain = 1.5;
@@ -102,6 +104,9 @@ public final class DepthWindowConfig {
 			try (Reader reader = Files.newBufferedReader(PATH)) {
 				DepthWindowConfig config = GSON.fromJson(reader, DepthWindowConfig.class);
 				if (config != null) {
+					if (config.viewMode == null) {
+						config.viewMode = ViewMode.WINDOW_AND_HEAD_LOOK; // unknown name in the file
+					}
 					config.save(); // writes any options added since the file was created
 					return config;
 				}
@@ -123,6 +128,26 @@ public final class DepthWindowConfig {
 			}
 		} catch (IOException e) {
 			DepthWindowClient.LOGGER.error("Could not write {}", PATH, e);
+		}
+	}
+
+	/** Options that describe your hardware or calibration; "reset to defaults" in the menu keeps these. */
+	private static final Set<String> CALIBRATION = Set.of(
+		"udpPort", "udpBindAddress", "screenWidthCm", "screenHeightCm", "neutralDistanceCm", "centerOffsetXCm", "centerOffsetYCm",
+		"neutralYawDegrees", "neutralPitchDegrees", "invertX", "invertY", "invertZ", "invertYaw", "invertPitch"
+	);
+
+	/** Resets every preference to its default but keeps calibration (screen size, neutral position, ports...). */
+	public void resetPreferences() {
+		DepthWindowConfig defaults = new DepthWindowConfig();
+		for (Field field : DepthWindowConfig.class.getFields()) {
+			if (!Modifier.isStatic(field.getModifiers()) && !CALIBRATION.contains(field.getName())) {
+				try {
+					field.set(this, field.get(defaults));
+				} catch (IllegalAccessException e) {
+					throw new IllegalStateException(e);
+				}
+			}
 		}
 	}
 
@@ -175,6 +200,21 @@ public final class DepthWindowConfig {
 				field.setDouble(this, d);
 			} else if (type == String.class) {
 				field.set(this, v);
+			} else if (type.isEnum()) {
+				Object match = null;
+				for (Object constant : type.getEnumConstants()) {
+					if (((Enum<?>) constant).name().equalsIgnoreCase(v)) {
+						match = constant;
+					}
+				}
+				if (match == null) {
+					List<String> names = new ArrayList<>();
+					for (Object constant : type.getEnumConstants()) {
+						names.add(((Enum<?>) constant).name());
+					}
+					throw new IllegalArgumentException("'" + name + "' must be one of " + String.join(", ", names));
+				}
+				field.set(this, match);
 			}
 		} catch (NumberFormatException e) {
 			throw new IllegalArgumentException("'" + v + "' is not a valid number for '" + name + "'");
