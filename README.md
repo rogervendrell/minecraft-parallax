@@ -1,5 +1,11 @@
 # Minecraft Parallax
 
+<p align="center">
+  <img src="docs/demo.gif" alt="A phone camera moves around a laptop running Minecraft with the mod. As the viewpoint shifts, the flower pot near the screen stays put while the hills and sea behind it slide past, as if the screen were a window into the world." width="640">
+  <br>
+  <sub>Filmed with a phone moving around the laptop. The webcam tracks the viewer's head, so the scene behind the screen shifts like a real window would.</sub>
+</p>
+
 A Fabric mod for **Minecraft 26.3** that turns your monitor into a window into the world. A webcam tracks your head, and the game renders from where your eyes actually are, using an off-axis projection (the "fish tank VR" / Johnny Lee Wii head-tracking effect). Lean left and you see more of what's to the right behind the window frame. Lean in and the window gets wider. Turn your head and the view turns with it, like TrackIR. That part is amplified, so you can look around while your eyes stay on the screen.
 
 <p align="center">
