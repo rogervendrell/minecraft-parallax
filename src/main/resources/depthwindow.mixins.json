@@ -1,0 +1,16 @@
+{
+	"required": true,
+	"package": "com.rogervendrell.depthwindow.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"client": [
+		"CameraMixin",
+		"FrustumMixin",
+		"ProjectionMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	},
+	"overwrites": {
+		"requireAnnotations": true
+	}
+}

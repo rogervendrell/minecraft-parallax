@@ -1,0 +1,15 @@
+{
+	"schemaVersion": 1,
+	"id": "depthwindow-test",
+	"version": "1.0.0",
+	"name": "Depth Window tests",
+	"environment": "*",
+	"entrypoints": {
+		"fabric-client-gametest": [
+			"com.rogervendrell.depthwindow.test.DepthWindowClientGameTest"
+		]
+	},
+	"depends": {
+		"depthwindow": "*"
+	}
+}

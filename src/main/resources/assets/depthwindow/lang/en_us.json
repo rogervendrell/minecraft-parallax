@@ -1,0 +1,6 @@
+{
+	"key.category.depthwindow.main": "Depth Window (Head Tracking)",
+	"key.depthwindow.toggle": "Toggle depth effect",
+	"key.depthwindow.recenter": "Recenter head position",
+	"key.depthwindow.status": "Show tracking status"
+}
