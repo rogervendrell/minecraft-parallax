@@ -38,7 +38,7 @@ To add a setting, create it with `toggle(...)` or `slider(...)` in `ParallaxScre
 
 ## Keys
 
-You can rebind these under *Options → Controls → Minecraft Parallax*. On HP laptops you may need to hold Fn.
+You can rebind these under *Options → Controls → Minecraft Parallax*. On many laptops you may need to hold Fn.
 
 | Key | Action |
 |-----|--------|
@@ -49,10 +49,10 @@ You can rebind these under *Options → Controls → Minecraft Parallax*. On HP 
 
 ## Calibration
 
-- **Screen size.** The default is 30.9 × 17.4 cm, read from this laptop's EDID (HP Pavilion 14). For another monitor, use `/parallax set screenWidthCm …` and `screenHeightCm …`.
+- **Screen size.** The default is 30.9 × 17.4 cm, a typical 14" laptop panel. For another screen, use `/parallax set screenWidthCm …` and `screenHeightCm …`.
 - **Depth.** Sit with your eyes exactly 50 cm from the screen (use a ruler or tape), then press `c` in the tracker window. The result is saved to `tracker/calibration.json`. To calibrate at a different distance, start the tracker with `--calib-distance 60` instead.
 - **Camera position.** The default assumes the webcam is centered 9.7 cm above the middle of the screen, which fits a 14" laptop bezel. For an external webcam, use `--cam-offset-x/-y/-z` (cm, relative to the screen center).
-- **Camera FOV.** The default is `--hfov 80`, which fits the HP Wide Vision 720p. This only affects how left/right/up/down is scaled, because depth calibration corrects distance.
+- **Camera FOV.** The default is `--hfov 80`, which fits a typical built-in laptop webcam. This only affects how left/right/up/down is scaled, because depth calibration corrects distance.
 
 Run `./tracker/run_tracker.sh --help` for every option, including `--camera 1` and `--no-preview`.
 

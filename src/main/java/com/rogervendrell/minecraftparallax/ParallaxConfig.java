@@ -35,7 +35,7 @@ public final class ParallaxConfig {
 	/** Address to listen on. Use 0.0.0.0 to accept data from another machine. */
 	public String udpBindAddress = "127.0.0.1";
 
-	/** Physical size of the visible screen area. Defaults are this laptop's panel (EDID: 309 x 174 mm). */
+	/** Physical size of the visible screen area. Defaults match a typical 14" 16:9 laptop panel (309 x 174 mm). */
 	public double screenWidthCm = 30.9;
 	public double screenHeightCm = 17.4;
 

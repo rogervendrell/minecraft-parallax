@@ -174,7 +174,7 @@ def main() -> None:
     ap.add_argument("--height", type=int, default=720)
     ap.add_argument("--fps", type=int, default=30)
     ap.add_argument("--hfov", type=float, default=80.0,
-                    help="camera horizontal field of view in degrees (HP Wide Vision 720p: ~88 diag = ~80 horiz)")
+                    help="camera horizontal field of view in degrees (typical laptop webcam: ~88 diag = ~80 horiz)")
     ap.add_argument("--ipd", type=float, default=6.3, help="distance between your eye centres in cm")
     ap.add_argument("--cam-offset-x", type=float, default=0.0,
                     help="camera lens position right of the screen centre, cm")
