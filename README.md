@@ -1,11 +1,10 @@
-# Depth Window
+# Minecraft Parallax
 
 A Fabric mod for **Minecraft 26.3** that turns your monitor into a window into the world. A webcam tracks your head, and the game renders from where your eyes actually are, using an off-axis projection (the "fish tank VR" / Johnny Lee Wii head-tracking effect). Lean left and you see more of what's to the right behind the window frame. Lean in and the window gets wider. Turn your head and the view turns with it, like TrackIR. That part is amplified, so you can look around while your eyes stay on the screen.
 
-```
-webcam ──► tracker/head_tracker.py ──UDP 4242──► Depth Window mod ──► shifted camera + asymmetric frustum
-           (MediaPipe face landmarks)            (OpenTrack packet format)
-```
+<p align="center">
+  <img src="docs/how-it-works.svg" alt="Top-down diagram: the monitor acts as a window into the Minecraft world. With your head centered you see a pillar and a house; move your head right and the view through the window swings to show a tree and the pillar instead. Below, two real in-game screenshots of the same scene from both head positions." width="860">
+</p>
 
 ## Quick start
 
@@ -17,13 +16,13 @@ webcam ──► tracker/head_tracker.py ──UDP 4242──► Depth Window mo
 
 2. **Start Minecraft with the mod.** Either way works:
    - **Dev client, no launcher needed:** `./gradlew runClient`
-   - **Your normal launcher:** install Fabric Loader (0.19.5 or newer) for 26.3. Then put [Fabric API](https://modrinth.com/mod/fabric-api) `0.164.0+26.3` and `build/libs/depthwindow-1.0.0.jar` in your `mods` folder.
+   - **Your normal launcher:** install Fabric Loader (0.19.5 or newer) for 26.3. Then put [Fabric API](https://modrinth.com/mod/fabric-api) `0.164.0+26.3` and `build/libs/minecraft-parallax-1.0.0.jar` in your `mods` folder.
 
 3. Join a world and sit how you normally sit. About a second after tracking data arrives, the mod centers on your current head position and fades the effect in. Press **F8** to recenter at any time. Press **F11** for fullscreen: the effect assumes the game fills the screen.
 
 ## Settings menu
 
-Press **F6**, click **Depth Window...** in the bottom-left corner of the pause menu, or type `/depthwindow menu`. The menu has:
+Press **F6**, click **Minecraft Parallax...** in the bottom-left corner of the pause menu, or type `/parallax menu`. The menu has:
 
 - **Status & keys:** whether the tracker is connected, what each key does, **Recenter now**, and a shortcut to rebind keys.
 - **Mode:**
@@ -35,11 +34,11 @@ Press **F6**, click **Depth Window...** in the bottom-left corner of the pause m
 
 Changes apply immediately, so you can watch them in the world behind the menu. They're saved when you close the menu.
 
-To add a setting, create it with `toggle(...)` or `slider(...)` in `DepthWindowScreen.addOptions()` and add its text to `assets/depthwindow/lang/en_us.json`.
+To add a setting, create it with `toggle(...)` or `slider(...)` in `ParallaxScreen.addOptions()` and add its text to `assets/minecraft_parallax/lang/en_us.json`.
 
 ## Keys
 
-You can rebind these under *Options → Controls → Depth Window*. On HP laptops you may need to hold Fn.
+You can rebind these under *Options → Controls → Minecraft Parallax*. On HP laptops you may need to hold Fn.
 
 | Key | Action |
 |-----|--------|
@@ -50,7 +49,7 @@ You can rebind these under *Options → Controls → Depth Window*. On HP laptop
 
 ## Calibration
 
-- **Screen size.** The default is 30.9 × 17.4 cm, read from this laptop's EDID (HP Pavilion 14). For another monitor, use `/depthwindow set screenWidthCm …` and `screenHeightCm …`.
+- **Screen size.** The default is 30.9 × 17.4 cm, read from this laptop's EDID (HP Pavilion 14). For another monitor, use `/parallax set screenWidthCm …` and `screenHeightCm …`.
 - **Depth.** Sit with your eyes exactly 50 cm from the screen (use a ruler or tape), then press `c` in the tracker window. The result is saved to `tracker/calibration.json`. To calibrate at a different distance, start the tracker with `--calib-distance 60` instead.
 - **Camera position.** The default assumes the webcam is centered 9.7 cm above the middle of the screen, which fits a 14" laptop bezel. For an external webcam, use `--cam-offset-x/-y/-z` (cm, relative to the screen center).
 - **Camera FOV.** The default is `--hfov 80`, which fits the HP Wide Vision 720p. This only affects how left/right/up/down is scaled, because depth calibration corrects distance.
@@ -60,14 +59,14 @@ Run `./tracker/run_tracker.sh --help` for every option, including `--camera 1` a
 ## In-game commands
 
 ```
-/depthwindow                  status
-/depthwindow menu             open the settings menu
-/depthwindow toggle | recenter | reload | reset
-/depthwindow get              list all options
-/depthwindow set <option> <value>
+/parallax                  status
+/parallax menu             open the settings menu
+/parallax toggle | recenter | reload | reset
+/parallax get              list all options
+/parallax set <option> <value>
 ```
 
-Useful options (all are stored in `config/depthwindow.json`):
+Useful options (all are stored in `config/minecraft_parallax.json`):
 
 | Option | Default | What it does |
 |--------|---------|--------------|
@@ -113,7 +112,7 @@ This builds a test scene, streams fake head positions over UDP and saves screens
 ## Building
 
 ```bash
-./gradlew build      # → build/libs/depthwindow-1.0.0.jar
+./gradlew build      # → build/libs/minecraft-parallax-1.0.0.jar
 ```
 
 Gradle automatically downloads the Java 25 it needs; Minecraft 26.x requires Java 25.
