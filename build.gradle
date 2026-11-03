@@ -43,7 +43,7 @@ jar {
 fabricApi {
 	configureTests {
 		createSourceSet = true
-		modId = "depthwindow-test"
+		modId = "minecraft_parallax_test"
 		enableGameTests = false
 		enableClientGameTests = true
 	}

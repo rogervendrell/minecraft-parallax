@@ -1,10 +1,10 @@
-package com.rogervendrell.depthwindow.gui;
+package com.rogervendrell.minecraftparallax.gui;
 
 import com.mojang.serialization.Codec;
-import com.rogervendrell.depthwindow.DepthWindowClient;
-import com.rogervendrell.depthwindow.DepthWindowConfig;
-import com.rogervendrell.depthwindow.HeadTrackingReceiver;
-import com.rogervendrell.depthwindow.ViewMode;
+import com.rogervendrell.minecraftparallax.ParallaxClient;
+import com.rogervendrell.minecraftparallax.ParallaxConfig;
+import com.rogervendrell.minecraftparallax.HeadTrackingReceiver;
+import com.rogervendrell.minecraftparallax.ViewMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -26,26 +26,26 @@ import net.minecraft.network.chat.Component;
 import org.jspecify.annotations.Nullable;
 
 /**
- * In-game settings for Depth Window: tracker status, key reminders, mode selection and sliders.
+ * In-game settings for Minecraft Parallax: tracker status, key reminders, mode selection and sliders.
  * Built from vanilla option widgets, so it looks and behaves like Minecraft's own settings screens.
  * Changes apply live (you can see them in the world behind the menu) and are saved when the screen closes.
  *
  * <p>To add a setting: create an {@link OptionInstance} with {@link #toggle} or {@link #slider} and add it to the
  * list in {@link #addOptions()}.
  */
-public class DepthWindowScreen extends OptionsSubScreen {
-	private static final String PREFIX = "depthwindow.options.";
+public class ParallaxScreen extends OptionsSubScreen {
+	private static final String PREFIX = "minecraft_parallax.options.";
 	private static final Codec<ViewMode> MODE_CODEC = Codec.STRING.xmap(ViewMode::valueOf, ViewMode::name);
 	private static final int ROW_WIDTH = 310;
 
-	private final DepthWindowConfig cfg = DepthWindowClient.config();
+	private final ParallaxConfig cfg = ParallaxClient.config();
 	private final List<OptionInstance<?>> headLookOptions = new ArrayList<>();
 	private @Nullable StringWidget trackerStatus;
 	private @Nullable Button recenterButton;
 	private @Nullable Component feedback;
 	private int feedbackTicks;
 
-	public DepthWindowScreen(@Nullable Screen lastScreen) {
+	public ParallaxScreen(@Nullable Screen lastScreen) {
 		super(lastScreen, Minecraft.getInstance().options, Component.translatable(PREFIX + "title"));
 	}
 
@@ -55,12 +55,12 @@ public class DepthWindowScreen extends OptionsSubScreen {
 		this.list.addHeader(text("section.status"));
 		this.trackerStatus = new StringWidget(ROW_WIDTH, 20, this.trackerStatusText(), this.font);
 		this.list.addBig(this.trackerStatus);
-		this.list.addBig(this.keyHint(DepthWindowClient.recenterKey(), "recenter"));
-		this.list.addBig(this.keyHint(DepthWindowClient.toggleKey(), "toggle"));
-		this.list.addBig(this.keyHint(DepthWindowClient.statusKey(), "status"));
-		this.list.addBig(this.keyHint(DepthWindowClient.menuKey(), "menu"));
+		this.list.addBig(this.keyHint(ParallaxClient.recenterKey(), "recenter"));
+		this.list.addBig(this.keyHint(ParallaxClient.toggleKey(), "toggle"));
+		this.list.addBig(this.keyHint(ParallaxClient.statusKey(), "status"));
+		this.list.addBig(this.keyHint(ParallaxClient.menuKey(), "menu"));
 		this.recenterButton = Button.builder(text("recenter_now"), button -> {
-				this.feedback = DepthWindowClient.recenter();
+				this.feedback = ParallaxClient.recenter();
 				this.feedbackTicks = 60;
 			})
 			.tooltip(Tooltip.create(text("recenter_now.tooltip")))
@@ -114,7 +114,7 @@ public class DepthWindowScreen extends OptionsSubScreen {
 		this.list.addBig(Button.builder(text("reset"), button -> {
 				this.cfg.resetPreferences();
 				this.cfg.save();
-				this.minecraft.gui.setScreen(new DepthWindowScreen(this.lastScreen));
+				this.minecraft.gui.setScreen(new ParallaxScreen(this.lastScreen));
 			})
 			.tooltip(Tooltip.create(text("reset.tooltip")))
 			.build());
@@ -143,7 +143,7 @@ public class DepthWindowScreen extends OptionsSubScreen {
 			this.trackerStatus.setMessage(this.feedbackTicks > 0 && this.feedback != null ? this.feedback : this.trackerStatusText());
 		}
 		if (this.recenterButton != null) {
-			this.recenterButton.active = DepthWindowClient.receiver().fresh(1.0) != null;
+			this.recenterButton.active = ParallaxClient.receiver().fresh(1.0) != null;
 		}
 	}
 
@@ -154,7 +154,7 @@ public class DepthWindowScreen extends OptionsSubScreen {
 	}
 
 	private Component trackerStatusText() {
-		HeadTrackingReceiver receiver = DepthWindowClient.receiver();
+		HeadTrackingReceiver receiver = ParallaxClient.receiver();
 		if (receiver.error() != null) {
 			return Component.translatable(PREFIX + "tracker.error", receiver.error()).withStyle(ChatFormatting.RED);
 		}

@@ -1,9 +1,10 @@
-package com.rogervendrell.depthwindow.test;
+package com.rogervendrell.minecraftparallax.test;
 
-import com.rogervendrell.depthwindow.DepthWindowClient;
-import com.rogervendrell.depthwindow.HeadCoupledView;
-import com.rogervendrell.depthwindow.ViewMode;
-import com.rogervendrell.depthwindow.gui.DepthWindowScreen;
+import com.rogervendrell.minecraftparallax.ParallaxClient;
+import com.rogervendrell.minecraftparallax.ParallaxConfig;
+import com.rogervendrell.minecraftparallax.HeadCoupledView;
+import com.rogervendrell.minecraftparallax.ViewMode;
+import com.rogervendrell.minecraftparallax.gui.ParallaxScreen;
 import net.minecraft.client.gui.screens.PauseScreen;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -22,13 +23,13 @@ import org.slf4j.LoggerFactory;
  * and takes a screenshot for each head pose.
  */
 @SuppressWarnings("UnstableApiUsage")
-public class DepthWindowClientGameTest implements FabricClientGameTest {
-	private static final Logger LOGGER = LoggerFactory.getLogger("DepthWindowTest");
+public class ParallaxClientGameTest implements FabricClientGameTest {
+	private static final Logger LOGGER = LoggerFactory.getLogger("ParallaxTest");
 	private static volatile double[] head;
 
 	@Override
 	public void runTest(ClientGameTestContext context) {
-		Thread sender = new Thread(DepthWindowClientGameTest::sendLoop, "fake head tracker");
+		Thread sender = new Thread(ParallaxClientGameTest::sendLoop, "fake head tracker");
 		sender.setDaemon(true);
 		sender.start();
 
@@ -59,14 +60,14 @@ public class DepthWindowClientGameTest implements FabricClientGameTest {
 			// Real laptop situation: eyes at webcam height, above the top edge of the screen. This used to freeze
 			// the game (vanilla culling loop). Auto-recenter should centre on it and the view should look vanilla.
 			shot(context, "02a_autocentered_laptop_pose", new double[]{0, 12, 55});
-			String centered = context.computeOnClient(mc -> "centerOffsetY=" + DepthWindowClient.config().centerOffsetYCm
-				+ " neutralDistance=" + DepthWindowClient.config().neutralDistanceCm);
-			LOGGER.info("[DepthWindowTest] after auto-recenter: {}", centered);
+			String centered = context.computeOnClient(mc -> "centerOffsetY=" + ParallaxClient.config().centerOffsetYCm
+				+ " neutralDistance=" + ParallaxClient.config().neutralDistanceCm);
+			LOGGER.info("[ParallaxTest] after auto-recenter: {}", centered);
 			// Back to an uncentred screen-relative setup for the geometry checks below.
 			context.runOnClient(mc -> {
-				DepthWindowClient.config().centerOffsetXCm = 0;
-				DepthWindowClient.config().centerOffsetYCm = 0;
-				DepthWindowClient.config().neutralDistanceCm = 50;
+				ParallaxClient.config().centerOffsetXCm = 0;
+				ParallaxClient.config().centerOffsetYCm = 0;
+				ParallaxClient.config().neutralDistanceCm = 50;
 			});
 			shot(context, "02_head_centered", new double[]{0, 0, 50});
 			shot(context, "03_head_right_12cm", new double[]{12, 0, 50});
@@ -75,13 +76,13 @@ public class DepthWindowClientGameTest implements FabricClientGameTest {
 			shot(context, "06_head_closer_30cm", new double[]{0, 0, 30});
 			shot(context, "07_head_further_80cm", new double[]{0, 0, 80});
 
-			context.runOnClient(mc -> DepthWindowClient.config().showStatusHud = true);
+			context.runOnClient(mc -> ParallaxClient.config().showStatusHud = true);
 			shot(context, "08_status_hud_head_right", new double[]{12, 4, 45});
-			context.runOnClient(mc -> DepthWindowClient.config().showStatusHud = false);
+			context.runOnClient(mc -> ParallaxClient.config().showStatusHud = false);
 
-			context.runOnClient(mc -> DepthWindowClient.config().enabled = false);
+			context.runOnClient(mc -> ParallaxClient.config().enabled = false);
 			shot(context, "09_disabled_head_right", new double[]{12, 0, 50});
-			context.runOnClient(mc -> DepthWindowClient.config().enabled = true);
+			context.runOnClient(mc -> ParallaxClient.config().enabled = true);
 
 			context.runOnClient(mc -> mc.options.setCameraType(net.minecraft.client.CameraType.THIRD_PERSON_BACK));
 			shot(context, "09b_third_person_head_left", new double[]{-12, 0, 50});
@@ -92,9 +93,9 @@ public class DepthWindowClientGameTest implements FabricClientGameTest {
 			shot(context, "16_turn_head_left_15deg", new double[]{0, 0, 50, -15, 0});
 			shot(context, "17_look_up_10deg", new double[]{0, 0, 50, 0, 10});
 			shot(context, "18_turn_and_lean_right", new double[]{8, 0, 50, 12, 0});
-			context.runOnClient(mc -> DepthWindowClient.config().viewMode = com.rogervendrell.depthwindow.ViewMode.WINDOW);
+			context.runOnClient(mc -> ParallaxClient.config().viewMode = com.rogervendrell.minecraftparallax.ViewMode.WINDOW);
 			shot(context, "19_rotation_off_head_turned", new double[]{0, 0, 50, 15, 0});
-			context.runOnClient(mc -> DepthWindowClient.config().viewMode = com.rogervendrell.depthwindow.ViewMode.WINDOW_AND_HEAD_LOOK);
+			context.runOnClient(mc -> ParallaxClient.config().viewMode = com.rogervendrell.minecraftparallax.ViewMode.WINDOW_AND_HEAD_LOOK);
 
 			// Eye positions outside the screen rectangle (these froze the game before the fix).
 			shot(context, "11_eyes_at_webcam_height", new double[]{0, 9.7, 50});
@@ -109,7 +110,7 @@ public class DepthWindowClientGameTest implements FabricClientGameTest {
 
 			// Settings menu: open it, scroll through it, switch mode, and reach it from the pause menu.
 			head = new double[]{0, 0, 50};
-			context.setScreen(() -> new DepthWindowScreen(null));
+			context.setScreen(() -> new ParallaxScreen(null));
 			context.waitTicks(10);
 			context.takeScreenshot("20_settings_menu_top");
 			context.getInput().setCursorPos(10, 300);
@@ -119,27 +120,71 @@ public class DepthWindowClientGameTest implements FabricClientGameTest {
 			context.getInput().scroll(-20);
 			context.waitTicks(5);
 			context.takeScreenshot("22_settings_menu_bottom");
-			context.runOnClient(mc -> DepthWindowClient.config().viewMode = ViewMode.WINDOW);
-			context.setScreen(() -> new DepthWindowScreen(null));
+			context.runOnClient(mc -> ParallaxClient.config().viewMode = ViewMode.WINDOW);
+			context.setScreen(() -> new ParallaxScreen(null));
 			context.waitTicks(5);
 			context.getInput().setCursorPos(10, 300);
 			context.getInput().scroll(-11);
 			context.waitTicks(5);
 			context.takeScreenshot("23_settings_window_only_mode_greyed_sliders");
-			context.runOnClient(mc -> DepthWindowClient.config().viewMode = ViewMode.WINDOW_AND_HEAD_LOOK);
+			context.runOnClient(mc -> ParallaxClient.config().viewMode = ViewMode.WINDOW_AND_HEAD_LOOK);
 
 			context.setScreen(() -> new PauseScreen(true));
 			context.waitTicks(10);
 			context.takeScreenshot("24_pause_menu_button");
-			context.clickScreenButton("depthwindow.pause_button");
+			context.clickScreenButton("minecraft_parallax.pause_button");
 			context.waitTicks(5);
 			String opened = context.computeOnClient(mc -> String.valueOf(mc.gui.screen() == null ? null : mc.gui.screen().getClass().getSimpleName()));
-			LOGGER.info("[DepthWindowTest] pause button opened: {}", opened);
-			if (!"DepthWindowScreen".equals(opened)) {
+			LOGGER.info("[ParallaxTest] pause button opened: {}", opened);
+			if (!"ParallaxScreen".equals(opened)) {
 				throw new AssertionError("Pause menu button did not open the settings screen: " + opened);
 			}
 			context.setScreen(() -> null);
 			context.waitTicks(5);
+
+			// Scene matching docs/how-it-works.svg, away from the test pillars. Player at (200.5, 0.5) facing north.
+			// Head centred sees pillar + house (tree just past the left edge); head 12 cm right sees tree + pillar.
+			server.runCommand("tp @p 200.5 -60 0.5 180 0");
+			context.waitTicks(60); // load the chunks there first, or the fills below do nothing
+			server.runCommand("fill 176 -60 -16 215 -50 3 minecraft:air");
+			server.runCommand("fill 181 -60 -10 181 -56 -10 minecraft:oak_log");
+			server.runCommand("fill 179 -56 -11 183 -54 -9 minecraft:oak_leaves[persistent=true] keep");
+			server.runCommand("setblock 181 -53 -10 minecraft:oak_leaves[persistent=true]");
+			server.runCommand("fill 199 -60 -6 199 -56 -6 minecraft:stone_bricks");
+			server.runCommand("fill 207 -60 -12 211 -57 -8 minecraft:oak_planks hollow");
+			server.runCommand("fill 207 -60 -8 207 -57 -8 minecraft:oak_log");
+			server.runCommand("fill 211 -60 -8 211 -57 -8 minecraft:oak_log");
+			server.runCommand("fill 209 -60 -8 209 -59 -8 minecraft:air");
+			server.runCommand("setblock 208 -58 -8 minecraft:glass");
+			server.runCommand("setblock 210 -58 -8 minecraft:glass");
+			server.runCommand("fill 206 -56 -13 212 -56 -7 minecraft:dark_oak_planks");
+			server.runCommand("fill 207 -55 -12 211 -55 -8 minecraft:dark_oak_planks");
+			server.runCommand("fill 208 -54 -11 210 -54 -9 minecraft:dark_oak_planks");
+			server.runCommand("tp @p 200.5 -60 0.5 180 0");
+			context.runOnClient(mc -> {
+				ParallaxConfig cfg = ParallaxClient.config();
+				cfg.viewMode = ViewMode.WINDOW;
+				cfg.centerOffsetXCm = 0;
+				cfg.centerOffsetYCm = 0;
+				cfg.neutralDistanceCm = 50;
+				if (!mc.gui.hud.isHidden()) {
+					mc.gui.hud.toggle(); // like pressing F1: no HUD or hand in the diagram shots
+				}
+			});
+			head = null;
+			context.waitTicks(40);
+			try {
+				context.waitFor(mc -> mc.levelRenderer.hasRenderedAllSections(), 600);
+			} catch (Throwable t) {
+				LOGGER.warn("Chunks did not finish rendering in time, continuing anyway");
+			}
+			shot(context, "diagram_head_centered", new double[]{0, 0, 50});
+			shot(context, "diagram_head_right", new double[]{12, 0, 50});
+			context.runOnClient(mc -> {
+				if (mc.gui.hud.isHidden()) {
+					mc.gui.hud.toggle();
+				}
+			});
 		} finally {
 			head = null;
 		}
@@ -155,7 +200,7 @@ public class DepthWindowClientGameTest implements FabricClientGameTest {
 			HeadCoupledView.crosshairNdcX(), HeadCoupledView.crosshairNdcY(),
 			HeadCoupledView.tanLeft(), HeadCoupledView.tanRight(), HeadCoupledView.tanBottom(), HeadCoupledView.tanTop()));
 		Path path = context.takeScreenshot(name);
-		LOGGER.info("[DepthWindowTest] {} -> {} | {}", name, path, state);
+		LOGGER.info("[ParallaxTest] {} -> {} | {}", name, path, state);
 	}
 
 	private static void sendLoop() {
@@ -170,7 +215,7 @@ public class DepthWindowClientGameTest implements FabricClientGameTest {
 					for (int i = 3; i < 6; i++) {
 						buf.putDouble(i < h.length ? h[i] : 0.0); // yaw, pitch, roll in degrees
 					}
-					socket.send(new DatagramPacket(buf.array(), 48, local, DepthWindowClient.config().udpPort));
+					socket.send(new DatagramPacket(buf.array(), 48, local, ParallaxClient.config().udpPort));
 				}
 				Thread.sleep(16);
 			}

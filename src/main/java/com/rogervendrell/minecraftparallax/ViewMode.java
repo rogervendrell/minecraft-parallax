@@ -1,4 +1,4 @@
-package com.rogervendrell.depthwindow;
+package com.rogervendrell.minecraftparallax;
 
 import java.util.Locale;
 import net.minecraft.network.chat.Component;
@@ -21,10 +21,10 @@ public enum ViewMode {
 	}
 
 	public Component displayName() {
-		return Component.translatable("depthwindow.mode." + this.name().toLowerCase(Locale.ROOT));
+		return Component.translatable("minecraft_parallax.mode." + this.name().toLowerCase(Locale.ROOT));
 	}
 
 	public Component description() {
-		return Component.translatable("depthwindow.mode." + this.name().toLowerCase(Locale.ROOT) + ".tooltip");
+		return Component.translatable("minecraft_parallax.mode." + this.name().toLowerCase(Locale.ROOT) + ".tooltip");
 	}
 }

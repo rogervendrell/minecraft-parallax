@@ -1,0 +1,68 @@
+{
+	"key.category.minecraft_parallax.main": "Minecraft Parallax (Head Tracking)",
+	"key.minecraft_parallax.toggle": "Toggle depth effect",
+	"key.minecraft_parallax.recenter": "Recenter head position",
+	"key.minecraft_parallax.status": "Show tracking status",
+	"key.minecraft_parallax.menu": "Open Minecraft Parallax settings",
+
+	"minecraft_parallax.pause_button": "Minecraft Parallax...",
+	"minecraft_parallax.pause_button.tooltip": "Head tracking settings",
+
+	"minecraft_parallax.mode.window": "Window only",
+	"minecraft_parallax.mode.window.tooltip": "Moving your head moves the view behind the screen, like looking through a real window. Turning your head does nothing.",
+	"minecraft_parallax.mode.window_and_head_look": "Window + head look",
+	"minecraft_parallax.mode.window_and_head_look.tooltip": "Window effect, plus turning your head turns the view (amplified, so your eyes can stay on the screen). Your aim stays where the mouse points.",
+
+	"minecraft_parallax.options.title": "Minecraft Parallax Settings",
+	"minecraft_parallax.options.section.status": "Status & keys",
+	"minecraft_parallax.options.section.mode": "Mode",
+	"minecraft_parallax.options.section.look": "Head look (turning your head)",
+	"minecraft_parallax.options.section.depth": "Depth effect (moving your head)",
+	"minecraft_parallax.options.section.other": "Other",
+
+	"minecraft_parallax.options.tracker.connected": "Tracker connected (%s Hz)",
+	"minecraft_parallax.options.tracker.waiting": "Tracker not connected: start ./tracker/run_tracker.sh",
+	"minecraft_parallax.options.tracker.error": "Tracker problem: %s",
+
+	"minecraft_parallax.options.key_hint.recenter": "%s Recenter: your current pose becomes \"straight ahead\"",
+	"minecraft_parallax.options.key_hint.toggle": "%s Turn the effect on or off",
+	"minecraft_parallax.options.key_hint.status": "%s Show or hide the status overlay",
+	"minecraft_parallax.options.key_hint.menu": "%s Open this menu (or /parallax menu)",
+
+	"minecraft_parallax.options.recenter_now": "Recenter now",
+	"minecraft_parallax.options.recenter_now.tooltip": "Sit how you normally play and look at the middle of the screen, then click.",
+	"minecraft_parallax.options.controls": "Change keys...",
+	"minecraft_parallax.options.controls.tooltip": "Rebind keys (look for the Minecraft Parallax category).",
+
+	"minecraft_parallax.options.mode": "Mode",
+	"minecraft_parallax.options.enabled": "Effect",
+	"minecraft_parallax.options.enabled.tooltip": "Master switch. Same as the toggle key.",
+
+	"minecraft_parallax.options.yaw_gain": "Left/right look",
+	"minecraft_parallax.options.yaw_gain.tooltip": "How much the view turns per degree you turn your head left or right.",
+	"minecraft_parallax.options.pitch_gain": "Up/down look",
+	"minecraft_parallax.options.pitch_gain.tooltip": "How much the view turns per degree you tilt your head up or down.",
+	"minecraft_parallax.options.deadzone": "Look deadzone",
+	"minecraft_parallax.options.deadzone.tooltip": "Head turns smaller than this are ignored, so the view doesn't wobble when you sit still.",
+	"minecraft_parallax.options.max_turn": "Max look angle",
+	"minecraft_parallax.options.max_turn.tooltip": "The furthest the view can turn away from where you are aiming.",
+
+	"minecraft_parallax.options.strength": "Depth strength",
+	"minecraft_parallax.options.strength.tooltip": "Amplifies head movement for the window effect. 1.0 is physically correct, 0 turns the window effect off.",
+	"minecraft_parallax.options.window_distance": "Window distance",
+	"minecraft_parallax.options.window_distance.tooltip": "How far away (in blocks) the virtual glass is. Things at this distance stay still; closer things pop out of the screen, further things sit behind it.",
+	"minecraft_parallax.options.smoothing": "Smoothing",
+	"minecraft_parallax.options.smoothing.tooltip": "Extra smoothing. Higher is steadier but reacts later.",
+	"minecraft_parallax.options.crosshair": "Crosshair follows aim",
+	"minecraft_parallax.options.crosshair.tooltip": "Moves the crosshair so it stays on the block you would actually hit.",
+
+	"minecraft_parallax.options.third_person": "In third person",
+	"minecraft_parallax.options.third_person.tooltip": "Also apply the window effect in third-person views. Head look only works in first person.",
+	"minecraft_parallax.options.auto_recenter": "Auto recenter",
+	"minecraft_parallax.options.auto_recenter.tooltip": "Recenter automatically when the tracker first connects after starting the game.",
+	"minecraft_parallax.options.status_hud": "Status overlay",
+	"minecraft_parallax.options.status_hud.tooltip": "Show tracking numbers in the top-left corner. Same as the status key.",
+
+	"minecraft_parallax.options.reset": "Reset to defaults",
+	"minecraft_parallax.options.reset.tooltip": "Resets the settings in this menu. Keeps your calibration (screen size, recentered position)."
+}

@@ -1,15 +1,15 @@
 {
 	"schemaVersion": 1,
-	"id": "depthwindow-test",
+	"id": "minecraft_parallax_test",
 	"version": "1.0.0",
-	"name": "Depth Window tests",
+	"name": "Minecraft Parallax tests",
 	"environment": "*",
 	"entrypoints": {
 		"fabric-client-gametest": [
-			"com.rogervendrell.depthwindow.test.DepthWindowClientGameTest"
+			"com.rogervendrell.minecraftparallax.test.ParallaxClientGameTest"
 		]
 	},
 	"depends": {
-		"depthwindow": "*"
+		"minecraft_parallax": "*"
 	}
 }

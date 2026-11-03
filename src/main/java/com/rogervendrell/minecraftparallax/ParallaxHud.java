@@ -1,4 +1,4 @@
-package com.rogervendrell.depthwindow;
+package com.rogervendrell.minecraftparallax;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,14 +11,14 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.Vec3;
 
-final class DepthWindowHud {
-	private DepthWindowHud() {
+final class ParallaxHud {
+	private ParallaxHud() {
 	}
 
 	static void register() {
 		// Keep the crosshair on the thing you are actually aiming at while the view is shifted.
 		HudElementRegistry.replaceElement(VanillaHudElements.CROSSHAIR, original -> (graphics, deltaTracker) -> {
-			if (!DepthWindowClient.config().crosshairFollowsAim || !HeadCoupledView.isActive()) {
+			if (!ParallaxClient.config().crosshairFollowsAim || !HeadCoupledView.isActive()) {
 				original.extractRenderState(graphics, deltaTracker);
 				return;
 			}
@@ -33,20 +33,20 @@ final class DepthWindowHud {
 			graphics.pose().popMatrix();
 		});
 
-		HudElementRegistry.addLast(Identifier.fromNamespaceAndPath(DepthWindowClient.MOD_ID, "status"), (graphics, deltaTracker) -> {
-			if (DepthWindowClient.config().showStatusHud) {
+		HudElementRegistry.addLast(Identifier.fromNamespaceAndPath(ParallaxClient.MOD_ID, "status"), (graphics, deltaTracker) -> {
+			if (ParallaxClient.config().showStatusHud) {
 				drawStatus(graphics);
 			}
 		});
 	}
 
 	static List<String> statusLines() {
-		DepthWindowConfig cfg = DepthWindowClient.config();
-		HeadTrackingReceiver receiver = DepthWindowClient.receiver();
+		ParallaxConfig cfg = ParallaxClient.config();
+		HeadTrackingReceiver receiver = ParallaxClient.receiver();
 		HeadTrackingReceiver.Sample fresh = receiver.fresh(cfg.trackingTimeoutSeconds);
 		List<String> lines = new ArrayList<>();
 
-		lines.add("Depth Window: " + (cfg.enabled ? "ON" : "OFF") + "  mode: " + cfg.viewMode.displayName().getString() + (HeadCoupledView.isActive() ? "  (active)" : ""));
+		lines.add("Minecraft Parallax: " + (cfg.enabled ? "ON" : "OFF") + "  mode: " + cfg.viewMode.displayName().getString() + (HeadCoupledView.isActive() ? "  (active)" : ""));
 		if (receiver.error() != null) {
 			lines.add("UDP error: " + receiver.error());
 		} else if (fresh == null) {

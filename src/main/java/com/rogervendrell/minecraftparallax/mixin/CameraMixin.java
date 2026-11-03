@@ -1,9 +1,9 @@
-package com.rogervendrell.depthwindow.mixin;
+package com.rogervendrell.minecraftparallax.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.rogervendrell.depthwindow.HeadCoupledView;
-import com.rogervendrell.depthwindow.OffAxisProjection;
+import com.rogervendrell.minecraftparallax.HeadCoupledView;
+import com.rogervendrell.minecraftparallax.OffAxisProjection;
 import net.minecraft.client.Camera;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.renderer.Projection;
@@ -57,7 +57,7 @@ public abstract class CameraMixin {
 		method = "update",
 		at = @At(value = "FIELD", target = "Lnet/minecraft/client/Camera;hudFov:F", opcode = Opcodes.PUTFIELD, shift = At.Shift.AFTER)
 	)
-	private void depthwindow$applyHeadOffset(DeltaTracker deltaTracker, CallbackInfo ci) {
+	private void parallax$applyHeadOffset(DeltaTracker deltaTracker, CallbackInfo ci) {
 		HeadCoupledView.CameraChange change = HeadCoupledView.update(
 			this.position, this.yRot, this.xRot, this.fov, this.detached, this.isPanoramicMode(), this.level, this.entity
 		);
@@ -74,7 +74,7 @@ public abstract class CameraMixin {
 		method = "createProjectionMatrixForCulling",
 		at = @At(value = "INVOKE", target = "Lorg/joml/Matrix4f;perspective(FFFFZ)Lorg/joml/Matrix4f;")
 	)
-	private Matrix4f depthwindow$offAxisCulling(
+	private Matrix4f parallax$offAxisCulling(
 		Matrix4f matrix, float fovy, float aspect, float zNear, float zFar, boolean zZeroToOne, Operation<Matrix4f> original
 	) {
 		if (!HeadCoupledView.isActive()) {
@@ -92,9 +92,9 @@ public abstract class CameraMixin {
 	}
 
 	@Inject(method = "update", at = @At("TAIL"))
-	private void depthwindow$updateProjection(DeltaTracker deltaTracker, CallbackInfo ci) {
+	private void parallax$updateProjection(DeltaTracker deltaTracker, CallbackInfo ci) {
 		boolean on = HeadCoupledView.isActive() && this.level != null;
-		((OffAxisProjection) this.projection).depthwindow$setOffAxis(
+		((OffAxisProjection) this.projection).parallax$setOffAxis(
 			on, HeadCoupledView.tanLeft(), HeadCoupledView.tanRight(), HeadCoupledView.tanBottom(), HeadCoupledView.tanTop()
 		);
 	}

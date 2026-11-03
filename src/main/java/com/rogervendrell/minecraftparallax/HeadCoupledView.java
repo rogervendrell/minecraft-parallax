@@ -1,4 +1,4 @@
-package com.rogervendrell.depthwindow;
+package com.rogervendrell.minecraftparallax;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
@@ -72,7 +72,7 @@ public final class HeadCoupledView {
 	public static @Nullable CameraChange update(
 		Vec3 cameraPos, float yRot, float xRot, float fov, boolean detached, boolean panoramic, @Nullable Level level, @Nullable Entity entity
 	) {
-		DepthWindowConfig cfg = DepthWindowClient.config();
+		ParallaxConfig cfg = ParallaxClient.config();
 		Minecraft mc = Minecraft.getInstance();
 
 		long now = System.nanoTime();
@@ -86,9 +86,9 @@ public final class HeadCoupledView {
 			return null;
 		}
 
-		HeadTrackingReceiver.Sample sample = DepthWindowClient.receiver().fresh(cfg.trackingTimeoutSeconds);
+		HeadTrackingReceiver.Sample sample = ParallaxClient.receiver().fresh(cfg.trackingTimeoutSeconds);
 		boolean tracking = sample != null;
-		boolean wanted = cfg.enabled && tracking && DepthWindowClient.effectReady() && (cfg.applyInThirdPerson || !detached);
+		boolean wanted = cfg.enabled && tracking && ParallaxClient.effectReady() && (cfg.applyInThirdPerson || !detached);
 
 		double d0 = Math.max(cfg.neutralDistanceCm, 10.0);
 		if (tracking) {

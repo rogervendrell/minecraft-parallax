@@ -1,4 +1,4 @@
-package com.rogervendrell.depthwindow;
+package com.rogervendrell.minecraftparallax;
 
 /**
  * Implemented by {@link net.minecraft.client.renderer.Projection} through a mixin. When enabled, the
@@ -6,5 +6,5 @@ package com.rogervendrell.depthwindow;
  * left/right/bottom/top edges.
  */
 public interface OffAxisProjection {
-	void depthwindow$setOffAxis(boolean enabled, float tanLeft, float tanRight, float tanBottom, float tanTop);
+	void parallax$setOffAxis(boolean enabled, float tanLeft, float tanRight, float tanBottom, float tanTop);
 }

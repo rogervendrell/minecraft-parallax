@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Depth Window head tracker.
+Minecraft Parallax head tracker.
 
 Webcam -> MediaPipe Face Landmarker -> position of the point between your eyes, in centimetres,
 relative to the centre of the screen -> UDP packets for the Minecraft mod.
@@ -229,7 +229,7 @@ def main() -> None:
     last_ts = -1
     fps_t0, fps_n, fps = time.monotonic(), 0, 0.0
     last_print = 0.0
-    window = "Depth Window tracker (q to quit)"
+    window = "Minecraft Parallax tracker (q to quit)"
 
     try:
         while True:

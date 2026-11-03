@@ -1,4 +1,4 @@
-package com.rogervendrell.depthwindow;
+package com.rogervendrell.minecraftparallax;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -17,13 +17,15 @@ import java.util.Set;
 import net.fabricmc.loader.api.FabricLoader;
 
 /**
- * Plain JSON config stored at {@code config/depthwindow.json}.
+ * Plain JSON config stored at {@code config/minecraft_parallax.json}.
  * Every public non-static field is an option and can also be changed in-game with
- * {@code /depthwindow set <option> <value>}.
+ * {@code /parallax set <option> <value>}.
  */
-public final class DepthWindowConfig {
+public final class ParallaxConfig {
 	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-	private static final Path PATH = FabricLoader.getInstance().getConfigDir().resolve("depthwindow.json");
+	private static final Path PATH = FabricLoader.getInstance().getConfigDir().resolve("minecraft_parallax.json");
+	/** Config file from when the mod was called "Depth Window"; moved to PATH on first start. */
+	private static final Path LEGACY_PATH = FabricLoader.getInstance().getConfigDir().resolve("depthwindow.json");
 
 	/** Master switch (also toggled with the keybind). */
 	public boolean enabled = true;
@@ -99,10 +101,18 @@ public final class DepthWindowConfig {
 	/** Show the status overlay in the top-left corner. */
 	public boolean showStatusHud = false;
 
-	public static DepthWindowConfig load() {
+	public static ParallaxConfig load() {
+		if (!Files.exists(PATH) && Files.exists(LEGACY_PATH)) {
+			try {
+				Files.move(LEGACY_PATH, PATH);
+				ParallaxClient.LOGGER.info("Moved {} to {}", LEGACY_PATH.getFileName(), PATH.getFileName());
+			} catch (IOException e) {
+				ParallaxClient.LOGGER.warn("Could not move the old config {}", LEGACY_PATH, e);
+			}
+		}
 		if (Files.exists(PATH)) {
 			try (Reader reader = Files.newBufferedReader(PATH)) {
-				DepthWindowConfig config = GSON.fromJson(reader, DepthWindowConfig.class);
+				ParallaxConfig config = GSON.fromJson(reader, ParallaxConfig.class);
 				if (config != null) {
 					if (config.viewMode == null) {
 						config.viewMode = ViewMode.WINDOW_AND_HEAD_LOOK; // unknown name in the file
@@ -111,11 +121,11 @@ public final class DepthWindowConfig {
 					return config;
 				}
 			} catch (IOException | JsonParseException e) {
-				DepthWindowClient.LOGGER.error("Could not read {}, using defaults", PATH, e);
+				ParallaxClient.LOGGER.error("Could not read {}, using defaults", PATH, e);
 			}
 		}
 
-		DepthWindowConfig config = new DepthWindowConfig();
+		ParallaxConfig config = new ParallaxConfig();
 		config.save();
 		return config;
 	}
@@ -127,7 +137,7 @@ public final class DepthWindowConfig {
 				GSON.toJson(this, writer);
 			}
 		} catch (IOException e) {
-			DepthWindowClient.LOGGER.error("Could not write {}", PATH, e);
+			ParallaxClient.LOGGER.error("Could not write {}", PATH, e);
 		}
 	}
 
@@ -139,8 +149,8 @@ public final class DepthWindowConfig {
 
 	/** Resets every preference to its default but keeps calibration (screen size, neutral position, ports...). */
 	public void resetPreferences() {
-		DepthWindowConfig defaults = new DepthWindowConfig();
-		for (Field field : DepthWindowConfig.class.getFields()) {
+		ParallaxConfig defaults = new ParallaxConfig();
+		for (Field field : ParallaxConfig.class.getFields()) {
 			if (!Modifier.isStatic(field.getModifiers()) && !CALIBRATION.contains(field.getName())) {
 				try {
 					field.set(this, field.get(defaults));
@@ -153,7 +163,7 @@ public final class DepthWindowConfig {
 
 	public static List<String> optionNames() {
 		List<String> names = new ArrayList<>();
-		for (Field field : DepthWindowConfig.class.getFields()) {
+		for (Field field : ParallaxConfig.class.getFields()) {
 			if (!Modifier.isStatic(field.getModifiers())) {
 				names.add(field.getName());
 			}
@@ -163,7 +173,7 @@ public final class DepthWindowConfig {
 
 	public String get(String name) {
 		try {
-			return String.valueOf(DepthWindowConfig.class.getField(name).get(this));
+			return String.valueOf(ParallaxConfig.class.getField(name).get(this));
 		} catch (ReflectiveOperationException e) {
 			throw new IllegalArgumentException("Unknown option '" + name + "'");
 		}
@@ -173,7 +183,7 @@ public final class DepthWindowConfig {
 	public void set(String name, String value) {
 		Field field;
 		try {
-			field = DepthWindowConfig.class.getField(name);
+			field = ParallaxConfig.class.getField(name);
 		} catch (NoSuchFieldException e) {
 			throw new IllegalArgumentException("Unknown option '" + name + "'");
 		}

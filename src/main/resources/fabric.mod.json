@@ -1,23 +1,23 @@
 {
 	"schemaVersion": 1,
-	"id": "depthwindow",
+	"id": "minecraft_parallax",
 	"version": "${version}",
-	"name": "Depth Window",
+	"name": "Minecraft Parallax",
 	"description": "Webcam head tracking + off-axis projection: your monitor becomes a window into the Minecraft world (head-coupled perspective, Johnny Lee style).",
 	"authors": [
 		"Roger Vendrell"
 	],
 	"contact": {},
 	"license": "MIT",
-	"icon": "assets/depthwindow/icon.png",
+	"icon": "assets/minecraft_parallax/icon.png",
 	"environment": "client",
 	"entrypoints": {
 		"client": [
-			"com.rogervendrell.depthwindow.DepthWindowClient"
+			"com.rogervendrell.minecraftparallax.ParallaxClient"
 		]
 	},
 	"mixins": [
-		"depthwindow.mixins.json"
+		"minecraft_parallax.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=0.19.5",

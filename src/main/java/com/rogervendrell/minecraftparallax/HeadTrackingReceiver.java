@@ -1,4 +1,4 @@
-package com.rogervendrell.depthwindow;
+package com.rogervendrell.minecraftparallax;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -42,16 +42,16 @@ public final class HeadTrackingReceiver {
 			socket = s;
 		} catch (IOException e) {
 			error = "Cannot listen on UDP " + boundTo + ": " + e.getMessage();
-			DepthWindowClient.LOGGER.error(error);
+			ParallaxClient.LOGGER.error(error);
 			return;
 		}
 
 		running = true;
 		DatagramSocket s = socket;
-		thread = new Thread(() -> run(s), "DepthWindow UDP receiver");
+		thread = new Thread(() -> run(s), "Minecraft Parallax UDP receiver");
 		thread.setDaemon(true);
 		thread.start();
-		DepthWindowClient.LOGGER.info("Listening for head tracking data on UDP {}", boundTo);
+		ParallaxClient.LOGGER.info("Listening for head tracking data on UDP {}", boundTo);
 	}
 
 	public synchronized void stop() {

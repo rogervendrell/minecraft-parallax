@@ -1,4 +1,4 @@
-package com.rogervendrell.depthwindow.mixin;
+package com.rogervendrell.minecraftparallax.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -19,24 +19,24 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(Frustum.class)
 public abstract class FrustumMixin {
 	@Unique
-	private static final int DEPTHWINDOW$MAX_STEPS = 256;
+	private static final int PARALLAX$MAX_STEPS = 256;
 
 	@Unique
-	private int depthwindow$steps;
+	private int parallax$steps;
 
 	@Inject(method = "offsetToFullyIncludeCameraCube", at = @At("HEAD"))
-	private void depthwindow$resetSteps(int cubeSize, CallbackInfoReturnable<Frustum> cir) {
-		this.depthwindow$steps = 0;
+	private void parallax$resetSteps(int cubeSize, CallbackInfoReturnable<Frustum> cir) {
+		this.parallax$steps = 0;
 	}
 
 	@WrapOperation(
 		method = "offsetToFullyIncludeCameraCube",
 		at = @At(value = "INVOKE", target = "Lorg/joml/FrustumIntersection;intersectAab(FFFFFF)I")
 	)
-	private int depthwindow$capSteps(
+	private int parallax$capSteps(
 		FrustumIntersection intersection, float minX, float minY, float minZ, float maxX, float maxY, float maxZ, Operation<Integer> original
 	) {
-		if (++this.depthwindow$steps > DEPTHWINDOW$MAX_STEPS) {
+		if (++this.parallax$steps > PARALLAX$MAX_STEPS) {
 			return FrustumIntersection.INSIDE;
 		}
 		return original.call(intersection, minX, minY, minZ, maxX, maxY, maxZ);
